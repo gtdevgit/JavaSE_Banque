@@ -24,6 +24,10 @@ public class Compte {
         numero = Integer.toString(Compte.compteur);
     }
 
+    public String statut(){
+        return "N° : " + getNumero() + " Solde = " + Utils.formatterMontant(getSolde());
+    }
+
     public void depot(float valeur) {
         solde = solde + valeur;
     }

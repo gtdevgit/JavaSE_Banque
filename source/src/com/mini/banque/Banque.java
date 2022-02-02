@@ -66,4 +66,46 @@ public class Banque {
         return Utils.chaineTableau(nom);
     }
 
+    private int nbComptes(){
+        int count = 0;
+        for (int i = 0; i < clients.length; i++){
+            count = count + clients[i].getNbComptes();
+        }
+        return count;
+    }
+
+    public String listeTousLesComptes(){
+        StringBuilder sb = new StringBuilder();
+
+        for (Client client : clients){
+            for (Compte compte : client.comptes){
+                sb.append("Client : " + client.getNom() + " Compte N° : " + compte.getNumero() + "\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String listeTousLesAutreComptes(Compte compteExclu){
+        StringBuilder sb = new StringBuilder();
+
+        for (Client client : clients){
+            for (Compte compte : client.comptes){
+                if (!compte.equals(compteExclu))
+                sb.append("Client : " + client.getNom() + " Compte N° : " + compte.getNumero() + "\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public Compte chercherCompteParNumero(String numero){
+        for (Client client : clients){
+            for (Compte compte : client.comptes){
+                if (compte.getNumero().equals(numero)){
+                    return compte;
+                }
+            }
+        }
+        return null;
+    }
+
 }

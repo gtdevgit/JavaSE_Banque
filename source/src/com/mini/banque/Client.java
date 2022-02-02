@@ -18,7 +18,7 @@ public class Client {
     }
 
     public Compte[] comptes;
-    private int getNbComptes(){
+    public int getNbComptes(){
         return comptes.length - 1;
     }
 
@@ -50,7 +50,24 @@ public class Client {
         }
 
         return Utils.chaineTableau(numero);
+    }
 
+    public String listeNumeroComptesAvecSolde(){
+        String numero[] = new String[comptes.length];
+
+        for (int i = 0; i < comptes.length; i++){
+            numero[i] = "N°: " + comptes[i].getNumero() + ", solde = " + Utils.formatterMontant(comptes[i].getSolde());
+        }
+
+        return Utils.chaineTableau(numero);
+    }
+
+    public Compte getCompteByNumber(String number){
+        for (int i = 0; i < comptes.length; i++){
+            if (comptes[i].getNumero().equals(number))
+                return comptes[i];
+        }
+        return null;
     }
 
 }

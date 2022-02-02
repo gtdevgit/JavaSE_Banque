@@ -46,12 +46,16 @@ public class BanqueInteractive {
         for (int i = 0; i < client.comptes.length; i++){
             sb.append(" " + i + "");
         }
-        int idxCompte = ScannerUtils.getInt("Selectionnez un numero de compte :" + client.listeNumeroComptes() + "");
+        String numeroCompte = ScannerUtils.getString("Selectionnez un numero de compte :" + client.listeNumeroComptesAvecSolde() + "");
         // todo : getCompteByNumero
-        Compte compte = client.comptes[idxCompte];
+        Compte compte = client.getCompteByNumber(numeroCompte);
+        if (compte == null){
+            System.err.println("Compte incorecte !");
+            operationClient(client);
+        }
 
         System.out.println("solde = " + compte.getSolde());
-        operationClient(client);
+        operationCompte(compte);
     }
 
     private void operationClient(Client client){
@@ -86,6 +90,55 @@ public class BanqueInteractive {
 
         interaction();
     }
+
+    private void operationCompteDebit(Compte compte){
+        float mt = ScannerUtils.getFloat("Retrait : Veuillez saisir le montant :");
+        compte.retrait(mt);
+        operationCompte(compte);
+    }
+
+    private void operationCompteCredit(Compte compte){
+        float mt = ScannerUtils.getFloat("Dépot : Veuillez saisir le montant :");
+        compte.depot(mt);
+
+        operationCompte(compte);
+    }
+
+    private void operationCompteVirement(Compte compte){
+        System.out.println("Virement");
+        String numero = ScannerUtils.getString("Selectionner un compte destinatire : \n" + banque.listeTousLesAutreComptes(compte));
+        Compte compteDestinatire = banque.chercherCompteParNumero(numero);
+        if (compteDestinatire == null) {
+            System.err.println("Erreur : Numero du compte incorrecte !");
+            operationCompteVirement(compte);
+        } else {
+            float mt = ScannerUtils.getFloat("Dépot : Veuillez saisir le montant :");
+            compte.virer(mt, compteDestinatire);
+        }
+
+        operationCompte(compte);
+    }
+
+
+    private void operationCompte(Compte compte){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Quelle opération voulez-vous effectuer sur le compte " + compte.statut() + " ?\n");
+        sb.append("1) Debit \n");
+        sb.append("2) Credit\n");
+        sb.append("3) Virement \n");
+        sb.append("4) Retour\n\n\n");
+
+        String message = sb.toString();
+        int operation = ScannerUtils.getInt(message);
+
+        switch (operation){
+            case 1 : operationCompteDebit(compte); break;
+            case 2 : operationCompteCredit(compte); break;
+            case 3 : operationCompteVirement(compte); break;
+            case 4 : interaction(); break;
+            default: operationCompte(compte);
+        }
+    };
 
     private void afficherBilan(){
         System.out.println("Afficher bilan");
@@ -148,7 +201,6 @@ public class BanqueInteractive {
     }
 
     public void terminer(){
-        ScannerUtils.closeScanner();
         System.out.println("Terminé");
     }
 }
