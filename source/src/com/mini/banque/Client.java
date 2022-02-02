@@ -7,6 +7,8 @@ import java.util.*;
  */
 public class Client {
 
+    private final int MAX_COMPTE = 4;
+
     public Client(String nomDuClient) {
         this.nom = nomDuClient;
         this.comptes = new Compte[] {new Compte()};
@@ -19,10 +21,15 @@ public class Client {
 
     public Compte[] comptes;
     public int getNbComptes(){
-        return comptes.length - 1;
+        return comptes.length ;
     }
 
     public void ajouterCompte(Compte compte) {
+        if (getNbComptes() >= MAX_COMPTE){
+            System.err.println("Maximum de compte attiend !");
+            return;
+        }
+
         Compte[] newComptes = Arrays.copyOf(this.comptes, this.comptes.length + 1);
         newComptes[newComptes.length - 1] = compte;
         comptes = newComptes;
